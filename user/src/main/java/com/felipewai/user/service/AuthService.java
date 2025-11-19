@@ -7,6 +7,7 @@ import com.felipewai.user.mapper.UserMapper;
 import com.felipewai.user.model.User;
 import com.felipewai.user.repository.UserRepository;
 import com.felipewai.user.security.JwtUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final EventPublisher eventPublisher;
     private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    @Transactional
     public UserResponse register(RegisterUserRequestDTO requestDTO){
         if (userRepository.findByEmail(requestDTO.email()).isPresent()){
             throw new RuntimeException("Email already exists");
@@ -32,6 +35,7 @@ public class AuthService {
         user.setPasswordHash(passwordHashed);
 
         User savedUser = userRepository.save(user);
+        eventPublisher.publish("user.created", userMapper.toResponse(savedUser));
         return userMapper.toResponse(savedUser);
     }
 

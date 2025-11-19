@@ -1,4 +1,4 @@
-package com.felipewai.user.controller.auth;
+package com.felipewai.user.controller;
 
 import com.felipewai.user.dto.user.LoginRequestDTO;
 import com.felipewai.user.dto.user.RegisterUserRequestDTO;
