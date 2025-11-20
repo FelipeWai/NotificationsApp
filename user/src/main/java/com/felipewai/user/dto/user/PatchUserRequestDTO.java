@@ -1,18 +1,14 @@
 package com.felipewai.user.dto.user;
 
-import jakarta.validation.constraints.Email;
-
-import java.util.Optional;
-
 public record PatchUserRequestDTO(
-        Optional<String> name,
+        String name,
 
-        Optional<String> surname,
+        String surname,
 
-        Optional<String> email,
+        String email,
 
-        Optional<String> phone,
+        String phone,
 
-        Optional<String> description
+        String description
 ) {
 }

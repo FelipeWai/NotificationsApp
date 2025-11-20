@@ -22,38 +22,31 @@ public class UserService {
 
     @Transactional
     public User patchUser(Long id, PatchUserRequestDTO requestDTO){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String loggedEmail;
-
-        if (principal instanceof User user) {
-            loggedEmail = user.getEmail();
-        } else if (principal instanceof UserDetails userDetails) {
-            loggedEmail = userDetails.getUsername();
-        } else {
-            throw new RuntimeException("Unexpected principal type");
-        }
-
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getEmail().equals(loggedEmail)) {
-            throw new RuntimeException("You cannot update another user");
+        if (requestDTO.name() != null) {
+            user.setName(requestDTO.name());
         }
 
-        applyPatch(requestDTO, user);
+        if (requestDTO.surname() != null) {
+            user.setSurname(requestDTO.surname());
+        }
+
+        if (requestDTO.email() != null) {
+            user.setEmail(requestDTO.email());
+        }
+
+        if (requestDTO.phone() != null) {
+            user.setPhone(requestDTO.phone());
+        }
+
+        if (requestDTO.description() != null) {
+            user.setDescription(requestDTO.description());
+        }
+
         eventPublisher.publish("user.updated", userMapper.toResponse(user));
         return userRepository.save(user);
-    }
-
-    private void applyPatch(PatchUserRequestDTO dto, User user) {
-
-        dto.name().ifPresent(user::setName);
-        dto.surname().ifPresent(user::setSurname);
-        dto.email().ifPresent(user::setEmail);
-        dto.phone().ifPresent(user::setPhone);
-        dto.description().ifPresent(user::setDescription);
-
     }
 
 }

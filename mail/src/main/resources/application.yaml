@@ -1,0 +1,26 @@
+#spring.application.name=mail
+
+spring:
+  application:
+    name: mail
+
+  datasource:
+    url: jdbc:h2:mem:maildb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    open-in-view: false
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
