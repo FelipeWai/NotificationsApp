@@ -1,11 +1,16 @@
-package com.felipewai.user.dto.user;
+package com.felipewai.mail.dto;
 
-public record UserResponse(
+public record UserPatchDTO(
         Long id,
+
         String name,
+
         String surname,
+
         String email,
+
         String phone,
+
         String description
 ) {
 }

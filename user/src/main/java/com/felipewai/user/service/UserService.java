@@ -25,6 +25,8 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        System.out.println("request: " + requestDTO);
+
         if (requestDTO.name() != null) {
             user.setName(requestDTO.name());
         }
@@ -45,8 +47,9 @@ public class UserService {
             user.setDescription(requestDTO.description());
         }
 
-        eventPublisher.publish("user.updated", userMapper.toResponse(user));
-        return userRepository.save(user);
+        User newUser = userRepository.save(user);
+        eventPublisher.publish("user.updated", userMapper.toResponse(newUser));
+        return newUser;
     }
 
 }
